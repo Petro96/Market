@@ -1,0 +1,295 @@
+
+################################################################# CODE COPY
+
+home page
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>Home Page</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Flask Market</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!--nav bar options -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Market</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Register</a>
+                </li>
+            </ul>
+        </div>
+      </nav>
+    <h1>Home Page</h1>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+    <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    -->
+  </body>
+  <style>
+    body {
+        background-color: #212121;
+        color: white;
+    }
+  </style>
+</html>
+
+
+
+###########################################################################
+
+market page
+
+<table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <!-- Your Columns HERE -->
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Price</th>
+                <th scope="col">Options</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Your rows inside the table HERE: -->
+                {% for item in items %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.barcode}}</td>
+                    <td>{{item.price}}$</td>
+                    <td>
+                        <button class="btn btn-outline btn-info">More Info</button>
+                        <button class="btn btn-outline btn-success">Purchase</button>
+                    </td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+#################################################################################################################################################
+#################################################################################################################################################
+#################################################################################################################################################
+			CODE STRUCTURE 
+
+- create object inside db an read it from python shell (you can use python file also)
+
+from market import app
+from market import db
+from market import item
+item1 = Item(name="Iphone 10", price=500, barcode='341567980132', description='desc')
+db.session.add(item1)
+db.session.commit()
+Item.query.all() =>>>> [<Item 1>]
+
+for item in Item.query.all():
+	item.name
+	item.price
+	item.description
+	item.id
+	item.barcode
+
+* filtering by..
+Item.query.filter_by(price=500)
+for item in Item.query.filter_by(price=500):
+	item.name
+	item.id
+	item.price
+* GUI for sqlite db
+DB Browser for SQLite - install
+
+
+######
+22.03.2024.
+
+Project Restructure
+
+- Circular imports 
+- Packages
+-> make directory which represend as package 
+-> create file outside of package which will used for running those files
+* __init__ file = difine directory like as package
+
+from models import Item <=> from market.models import Item => you can import object not a file -> you importing objects from files
+
+####
+
+db instance folder must be on the default location inside VS code studio
+
+#####
+
+password -> hash creation method - secure
+
+#####
+22.03.2024.
+RDMS - relational database management system
+
+*relational_key = relationship('object',backref='',lazy=True)
+*backref='owned_user' -> point to user = see which objects has that user(ex. you can see which user owned Iphone 10)
+*lazy=True -> grab all objects at ones!
+
+class User:
+
+	id = db.Column(db.Integer(),priamry_key=True)
+	relationalship = relationship('Item',backref='owned_user',lazy=True) # relationship with Item object
+
+class Item:
+
+	id = db.Column(db.Integer(),priamry_key=True)
+	owner = db.Colmun(db.Integer(),db.ForeignKey('user.id')) # id of user that own this item - ForeignKey()
+
+> python
+> from market.models import db
+> db.drop_all() -> delete all information
+> db.create_all() -> create or update information
+
+item1_grab = Item.query.filter_by(name='Iphone').first() -> select item 
+item1_grab.owner = User.query.filter_by(userName='Jozef Mitchell').first().id
+db.session.add(item1)
+db.sesion.commit()
+print(item1.owner) # result id of user
+
+i = Item.query.filter_by(name='Iphone').first()
+i.owned_user => # <User 1>
+
+####
+25.03.2024.
+
+pip install bootstrap-flask
+pip instal flask-WTF
+
+from flask_wtf import FlaskForm
+from wtform import StringFields, PasswordsFields, SubmitFields,TextAreaField, IntegerField, RadioField, BooleanField, EmailField
+from wtform.validators import Length, Email, EqualTo, DataRequired
+
+flask form
+
+- StringField()
+- EmaiField()
+- PasswordField methods()
+- SubmitField()
+
+- html file 
+
+- security label for showing(creating ) the form object -> secrite key 
+
+- app.config['SECRET_KEY'] = 'secret_key_generator' # imort os / os.urandom(12).hex()
+
+# creation of form 
+
+    description = TextAreaField('Course Description',
+                                validators=[InputRequired(),
+                                            Length(max=200)])
+
+    price = IntegerField('Price', validators=[InputRequired()])
+
+    level = RadioField('Level',
+                       choices=['Beginner', 'Intermediate', 'Advanced'],
+                       validators=[InputRequired()])
+
+    available = BooleanField('Available', default='checked')
+
+
+- form.username.label() # create label of usernmae
+- form.username(class="form-control", placeholder="username")
+
+# form validation
+
+- form.validate_on_submit() -> validate user registration
+- secure from CSRF -> {{form.hiddden_tag()}}
+
+- from wtform.validators import Length, EqualTo, Email, DataRequired
+
+* Length(min=,max=)
+* EqualTo('variableThatYouChacking')
+
+=> check validation form passing all validators:
+
+validator=[Length(min,max), DataRequired()]
+
+username = StringField(label='User Name', validators=[Length(min,max),RequiredData()])
+
+*# form.errors -> collect all errors that were envolved in form validator
+
+=> to activate form validation -> pip install email_validator
+
+########
+26.03.2024.
+
+Flashes & advanced validation
+
+- flash('message', category='danger') -> print message 
+- get_flashed_messages() -> import(catch) messages into jinja2 template base
+
+{% with messages = get_flashed_messages(with_categories=true) %} // grab categories options 
+	{% if messages %}
+		{% for m in messages %}
+			{{m}}
+		{% endfor %}
+	{% endif %}
+{% endwith %}
+
+- category define alert tempate class creation
+
+<div class="alert alert-{{category}}">
+
+	<button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close"> <!-- Bootstrap classes -->
+
+                        <span aria-hidden="true">&times;</span>
+        </button>
+        {{message}}
+</div>
+
+- * check if user already exist in db and catch errors
+
+#*$ FLASK FORM OBJECT RUNS EVERY FUNCTION WITH "VALIDATION- validate " PREFIXES (ex. def validate_username(): )
+
+def validate_username(user_to_check): -> will be executed automatically from FlaskForm
+
+	user = User.query.filtered_by(user_to_check).first()
+	if user:
+		rasie ValidationError('User already exists!')
+
+
+####
+
+
+User authentication 1
+
+
+
+
+
+
+
+
