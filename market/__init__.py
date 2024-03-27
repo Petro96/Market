@@ -1,7 +1,8 @@
 
 
-from flask import Flask,render_template,redirect,request,url_for;
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 import os
 
@@ -21,6 +22,10 @@ app.config['SECRET_KEY'] = 'd0d1a648ef9f8b5136348fd0' # form config of secret ke
 
 db = SQLAlchemy(app) # instance DB
 
-app.app_context().push()
+app.app_context().push() # make app visible in terminal 
+
+# make hash passwords
+
+bcrypt = Bcrypt(app)
 
 from market import routes

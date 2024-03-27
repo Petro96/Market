@@ -3,7 +3,7 @@
 from market import app,db
 from flask import render_template,redirect,url_for,flash,get_flashed_messages,request
 from market.models import Item,User
-from market.forms import RegisterForm
+from market.forms import RegisterForm, LoginForm
 
 @app.route('/')
 @app.route('/home')
@@ -35,7 +35,9 @@ def register_page():
 
         user_to_create = User(userName=form.username.data,
                               email_address=form.email_address.data,
-                              password_hash=form.password.data)
+                              password=form.password.data) # password -> setter 
+                            # Silvia Pot 987654
+        #user_to_create.getUserName() # calling User getter
         db.session.add(user_to_create)
         db.session.commit()
 
@@ -51,3 +53,9 @@ def register_page():
     return render_template('register.html',form=form)
 
 
+@app.route('/login', methods=['GET','POST'])
+def login_page():
+
+    login = LoginForm()
+
+    return render_template('login.html',login=login)

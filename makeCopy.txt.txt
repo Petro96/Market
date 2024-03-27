@@ -185,7 +185,7 @@ i.owned_user => # <User 1>
 ####
 25.03.2024.
 
-pip install bootstrap-flask
+*pip install bootstrap-flask
 pip instal flask-WTF
 
 from flask_wtf import FlaskForm
@@ -225,7 +225,7 @@ flask form
 
 # form validation
 
-- form.validate_on_submit() -> validate user registration
+- form.validate_on_submit() and request.methods=='POST'-> validate user registration
 - secure from CSRF -> {{form.hiddden_tag()}}
 
 - from wtform.validators import Length, EqualTo, Email, DataRequired
@@ -246,7 +246,7 @@ username = StringField(label='User Name', validators=[Length(min,max),RequiredDa
 ########
 26.03.2024.
 
-Flashes & advanced validation
+Flashes & advanced validation - error handling
 
 - flash('message', category='danger') -> print message 
 - get_flashed_messages() -> import(catch) messages into jinja2 template base
@@ -282,9 +282,26 @@ def validate_username(user_to_check): -> will be executed automatically from Fla
 
 
 ####
-
+27.03.2024.
 
 User authentication 1
+
+- make hash passwords
+
+pip install flask_bcrypt
+
+- initialize bcrypt = Bcrypt(app)
+
+@property
+def password(self):
+	return self.password
+
+@password.setter
+def password(self,pass):
+	self.password_hash = bcrypt.generate_password_hash(pass).decode('utf-8')
+
+# Login form 
+
 
 
 
