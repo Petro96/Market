@@ -284,7 +284,7 @@ def validate_username(user_to_check): -> will be executed automatically from Fla
 ####
 27.03.2024.
 
-User authentication 1
+User authentication 1(hash password)
 
 - make hash passwords
 
@@ -300,7 +300,59 @@ def password(self):
 def password(self,pass):
 	self.password_hash = bcrypt.generate_password_hash(pass).decode('utf-8')
 
-# Login form 
+* Login form 
+
+- create object FlaskForm -> LoginForm => login.html
+
+- validate_on_submit()
+
+# authentication 2(login functionality)
+29.03.2024.
+
+- pip install flask_login
+
+login_manager = LoginManager(app)
+login_manager.login_view = "login_page"
+
+main operations:
+- check if user exists
+
+	current_user = User.query.filter_by(userName=login.username.data).first() # login.username.data must be equaled to userName because you declared like that !!!
+
+- if user exists check his password
+
+	if current_user and current_user.check_password_correction(current_password=login.password.data):
+		login_user(current_user)
+
+******* & => user loader -> manage different pages with the same login user
+
+@login_manager.user_loader
+def load_user(user_if):
+	return User.query.get(int(user_id))
+
+
+*#$ YOU CAN ONLY LOG USER THAT HAVE HASHED PASSWORD !
+
+from flas_login import login_user,logout_user, login_required		 #$% current_user => info/action about login user
+
+{{% if current_user.is_authenticated %}}
+	Welcome current_user.userName
+	Logout
+
+<i class="fas fa-coins"></i> <!-- symbol of coins -->	
+	{{current_user.budget}}
+	
+logout_user()
+flash("You have been seccussfully logged put!")
+redirect(url_for('index.html'))
+
+= @login_required => you wanna to show market page only if user is logged in  -> you must locate your required page!!
+def market_page(): => inside __init__ file => loggin_manager.login_view = "login_page"
+
+login_manager.login_message_category = "info"
+
+
+
 
 
 

@@ -4,6 +4,7 @@ from market import app,db
 from flask import render_template,redirect,url_for,flash,get_flashed_messages,request
 from market.models import Item,User
 from market.forms import RegisterForm, LoginForm
+from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/home')
@@ -12,6 +13,7 @@ def home_page():
 
 # /market -> endpoint (usage: GET,POST,PUT,DELETE)
 @app.route('/market')
+@login_required
 def market_page():
 
     items = Item.query.all() # get all items from db
@@ -35,12 +37,17 @@ def register_page():
 
         user_to_create = User(userName=form.username.data,
                               email_address=form.email_address.data,
-                              password=form.password.data) # password -> setter 
+                              password=form.password.data) # password -> property setter => setter=method_argument 
                             # Silvia Pot 987654
         #user_to_create.getUserName() # calling User getter
         db.session.add(user_to_create)
         db.session.commit()
 
+        # --------------- After registration you are logged in --------
+        login_user(user_to_create)
+
+        flash(f'Account created successfully! You are now logged in as {user_to_create.userName}',category='success')
+        # -------------------------------------------------------------
         return redirect(url_for('market_page'))
     
     if form.errors != {}: # if dictionary is not  empty! It meens that exist some errors -> if theres no errors from validator
@@ -58,4 +65,26 @@ def login_page():
 
     login = LoginForm()
 
+    if login.validate_on_submit():
+
+        attempted_user = User.query.filter_by(userName=login.username.data).first()
+
+        if attempted_user and attempted_user.check_password_correction(attempted_password=login.password.data):
+
+            login_user(attempted_user)
+
+            flash(f'Success! You are logged as: {attempted_user.userName}',category='success')
+            return redirect(url_for('market_page'))
+        else:
+            flash('Username and password are not match! Please try again!',category='danger')
+
     return render_template('login.html',login=login)
+
+@app.route('/logout_page', methods=['GET','POST'])
+def logout_page():
+
+    logout_user()
+
+    flash("You have been logged out!", category="info")
+
+    return redirect(url_for('home_page'))
