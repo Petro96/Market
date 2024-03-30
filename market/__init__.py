@@ -32,6 +32,7 @@ bcrypt = Bcrypt(app)
 # login 
 
 login_manager = LoginManager(app)
+
 login_manager.login_view = "login_page" # login required -> locate login page to allow it befor market page 
 login_manager.login_message_category = "info" 
 

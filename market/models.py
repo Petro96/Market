@@ -51,6 +51,10 @@ class User(db.Model, UserMixin):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
             
 
+    def can_purchase(self,item_object):
+        return self.budget >= item_object.price 
+
+
     def __repr__(self) -> str:
         return f'User:<{self.userName}>'
 
@@ -68,6 +72,12 @@ class Item(db.Model):
     # consturctor
 
     # geters, setters
+
+    def buy(self, user):
+
+        self.owner = user.id
+        user.budget -= self.price
+        db.session.commit()
 
 
     def __repr__(self) -> str:

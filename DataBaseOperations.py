@@ -15,7 +15,7 @@ from market.models import Item,User
 # create  Item object 
 item1 = Item(name="Iphone 14", price=500, barcode='341365789341',description='desc')
 item2 = Item(name="Laptop", price=600, barcode='091237865981', description='description about')
-
+item3 = Item(name="Speaker Sony 60W",price=300,barcode='345127689014',description='About Speakers')
 # adding to database
 
 #db.session.add(item1)
@@ -23,6 +23,10 @@ item2 = Item(name="Laptop", price=600, barcode='091237865981', description='desc
 
 #db.session.add(item2)
 #db.session.commit()
+
+#db.session.add(item3)
+#db.session.commit()
+
 
 # print out database items object
 print(Item.query.all())

@@ -3,20 +3,57 @@
 from market import app,db
 from flask import render_template,redirect,url_for,flash,get_flashed_messages,request
 from market.models import Item,User
-from market.forms import RegisterForm, LoginForm
-from flask_login import login_user, logout_user, login_required
+from market.forms import RegisterForm, LoginForm, PurchaseItemForm
+from flask_login import login_user, logout_user, login_required,current_user
 
 @app.route('/')
 @app.route('/home')
 def home_page():
     return render_template('index.html')
 
+
 # /market -> endpoint (usage: GET,POST,PUT,DELETE)
-@app.route('/market')
+@app.route('/market', methods=['GET','POST'])
 @login_required
 def market_page():
 
-    items = Item.query.all() # get all items from db
+    purchase_form = PurchaseItemForm()
+
+    """ if purchase_form.validate_on_submit():
+
+        #print(purchase_form.__dict__) # return dict of purchasing items
+        # <input id="submit" name="submit" type="submit" value="Purchase Item">
+        print(request.form.get['purchased_item']) # return ipnut tag html code -> represend it in modals file like an hidden
+ """
+
+    if request.method == "POST":
+
+        purchased_item = request.form.get('purchased_item') # return Object name , that object is load into curren_user variable by flask_login library
+
+        p_item_object = Item.query.filter_by(name=purchased_item).first()
+        # if object exists start purchasing
+        if p_item_object:
+            # check do you have enough money 
+            if current_user.can_purchase(p_item_object):
+                # method : p_item_object.buy()
+                p_item_object.owner = current_user.id # current_user -> return User object wich is log in 
+                current_user.budget -= p_item_object.price
+                db.session.commit()
+
+                flash(f"Congratulations! You purchased {p_item_object.name} for {p_item_object.price}$ price.",category="success")
+            else:
+                flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.name}.",category="danger")
+
+        return redirect(url_for('market_page'))
+    
+    if request.method == "GET":
+        # show items that doesnt have owner
+        items = Item.query.filter_by(owner=None)
+        return render_template('market.html',items=items, purchase_form=purchase_form)
+
+    #items = Item.query.all() # get all items from db
+
+    # adding items before we create db
     '''
     items = [
     {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
@@ -25,7 +62,7 @@ def market_page():
     ]
     '''
 
-    return render_template('market.html',items=items)
+    
 
 
 @app.route('/register',methods=['GET','POST'])
