@@ -403,6 +403,8 @@ Item selling
 	Item.query.filter_by(owner=current_user.id) 
 - create modal form for owned items, include it inside market.html(connect this page with modal)
 -backend operations(selling) for owned_item
+	:- grap the value from modals form and check does exist
+	- check can you sell -> if user own that item can sell
 
 
 
