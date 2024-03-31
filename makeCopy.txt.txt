@@ -371,7 +371,7 @@ login_manager.login_message_category = "info"
 	</div>
 </div>
 
-- modals -> to give us more information about items => modal in the separation file  
+- modals -> build informal blocks, to give us more information about items => modal in the separation file  
 
 - id = "Modal-MoreInfo-{{item.id}}" <button data-target="#Modal-MoreInfo" data-toggle="modal">
 
@@ -381,14 +381,30 @@ login_manager.login_message_category = "info"
 
 {% include 'includes/items_modals.html' %}
 
+*every object has own modals 
+*user has own modals in which has form, which use for send/interact/pointing item.name to backend
+*beckend recieve item.name, search for item object and gives user ownership(throught curren_user flask_form variable that keep current login user) for that item
+
 - submit form for purchase item
 	- create FlaskForm class PurchaseItem, SellItem
-	- create object in routes => print(purchase_item['submit']) / <input type="hidden" id="purchase_item">
-	- in modal files call the purchase_form.submit 
+	- create object in routes => print data from PurchaseItem form print(purchase_item['submit']) / <input type="hidden" id="purchase_item"> catch item(object).name from html
+	- in modal files(items_modals.html) generate the purchase_form.submit 
 	
-	- <input value="{{item.name}}"> => purchased_form['purchased_item'] => return me item that i bought
-	- decrease budget of logged user
+	- <input value="{{item.name}}"> => purchased_form['purchased_item'] => return me item.name that i bought / current_user keep user(object)
+	- decrease budget of logged user / check do you have enough budget to purchase item
 - remove bought items => show only items that doesnt have user owner 
+
+### 
+
+Item selling
+31.03.2024.
+
+- select the owned items by current_user to display it in "Owned Items section ":
+	Item.query.filter_by(owner=current_user.id) 
+- create modal form for owned items, include it inside market.html(connect this page with modal)
+-backend operations(selling) for owned_item
+
+
 
 
 

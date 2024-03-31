@@ -3,7 +3,7 @@
 from market import app,db
 from flask import render_template,redirect,url_for,flash,get_flashed_messages,request
 from market.models import Item,User
-from market.forms import RegisterForm, LoginForm, PurchaseItemForm
+from market.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
 from flask_login import login_user, logout_user, login_required,current_user
 
 @app.route('/')
@@ -18,6 +18,8 @@ def home_page():
 def market_page():
 
     purchase_form = PurchaseItemForm()
+    
+    selling_form = SellItemForm()
 
     """ if purchase_form.validate_on_submit():
 
@@ -27,29 +29,47 @@ def market_page():
  """
 
     if request.method == "POST":
-
+        # -------------------  Purchase Items ---------------------
         purchased_item = request.form.get('purchased_item') # return Object name , that object is load into curren_user variable by flask_login library
 
         p_item_object = Item.query.filter_by(name=purchased_item).first()
         # if object exists start purchasing
+        
         if p_item_object:
             # check do you have enough money 
             if current_user.can_purchase(p_item_object):
-                # method : p_item_object.buy()
-                p_item_object.owner = current_user.id # current_user -> return User object wich is log in 
-                current_user.budget -= p_item_object.price
-                db.session.commit()
+                # method : p_item_object.buy(current_user) # current_user -> return User object wich is log in 
+                p_item_object.buy(current_user)
 
                 flash(f"Congratulations! You purchased {p_item_object.name} for {p_item_object.price}$ price.",category="success")
             else:
                 flash(f"Unfortunately, you don't have enough money to purchase {p_item_object.name}.",category="danger")
+        # ------------------- Selling Items -----------------------
+        sold_item = request.form.get('sold_item')
+
+        s_item_object = Item.query.filter_by(name=sold_item).first()
+
+        if s_item_object:
+
+            if current_user.can_sell(s_item_object):
+
+                s_item_object.sell(current_user)  
+
+                flash(f"Congratulations! You sold {s_item_object.name} for {s_item_object.price}$ price. Its returned to Market.",category="success")      
+            else:
+                 flash(f"Something went wrong selling this item {s_item_object.name}.",category="danger")
 
         return redirect(url_for('market_page'))
     
     if request.method == "GET":
+
         # show items that doesnt have owner
         items = Item.query.filter_by(owner=None)
-        return render_template('market.html',items=items, purchase_form=purchase_form)
+
+        # grab owned items for logged in user
+        owned_items = Item.query.filter_by(owner=current_user.id) # grab items by ID of user because you create relatioship with user_id
+
+        return render_template('market.html',items=items, purchase_form=purchase_form, owned_items=owned_items, selling_form=selling_form)
 
     #items = Item.query.all() # get all items from db
 

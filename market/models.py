@@ -4,8 +4,8 @@ from market import db, login_manager
 from market import bcrypt
 from flask_login import UserMixin
 
-# loader usage => for managing more pages with the same user 
-@login_manager.user_loader
+# loader usage =>create session => for managing more pages with the same user 
+@login_manager.user_loader # contain UserMixin - methods that must pass before its loaded
 def load_user(user_id):
     return User.query.get(int(user_id))
 
@@ -53,6 +53,9 @@ class User(db.Model, UserMixin):
 
     def can_purchase(self,item_object):
         return self.budget >= item_object.price 
+    
+    def can_sell(self, item_obejct):
+        return item_obejct in self.items # items => collect owner Items<Object>
 
 
     def __repr__(self) -> str:
@@ -73,12 +76,19 @@ class Item(db.Model):
 
     # geters, setters
 
+    # methods
+
     def buy(self, user):
 
         self.owner = user.id
         user.budget -= self.price
         db.session.commit()
 
+    def sell(self, user):
+
+        self.owner = None
+        user.budget += self.price
+        db.session.commit()
 
     def __repr__(self) -> str:
         return f'Item: {self.name}'
