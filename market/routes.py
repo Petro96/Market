@@ -30,7 +30,7 @@ def market_page():
 
     if request.method == "POST":
         # -------------------  Purchase Items ---------------------
-        purchased_item = request.form.get('purchased_item') # return Object name , that object is load into curren_user variable by flask_login library
+        purchased_item = request.form.get('purchased_item') # get(name_of_input) return Object name , that object is load into curren_user variable by flask_login library
 
         p_item_object = Item.query.filter_by(name=purchased_item).first()
         # if object exists start purchasing
@@ -96,6 +96,7 @@ def register_page():
                               email_address=form.email_address.data,
                               password=form.password.data) # password -> property setter => setter=method_argument 
                             # Silvia Pot 987654
+                            # Julia Moor 012345
         #user_to_create.getUserName() # calling User getter
         db.session.add(user_to_create)
         db.session.commit()

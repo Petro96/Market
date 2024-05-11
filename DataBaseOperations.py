@@ -16,6 +16,10 @@ from market.models import Item,User
 item1 = Item(name="Iphone 14", price=500, barcode='341365789341',description='desc')
 item2 = Item(name="Laptop", price=600, barcode='091237865981', description='description about')
 item3 = Item(name="Speaker Sony 60W",price=300,barcode='345127689014',description='About Speakers')
+item4 = Item(name="Samsung A53", price=550,barcode='893412345678', description='phone for recomendation')
+item5 = Item(name="Laptop Lenovo T540", price=460, barcode='908761234567', description='Laptop is great for learning and administration')
+item6 = Item(name="Fender Squier Guitar", price=250, barcode='561209876512', description='Guitar is used, doesnt have demage,it is very high quality. ')
+item7 = Item(name="Mouse GameMouse Scorpion",price=34, barcode='341209876543',description='Game-Mouse, Best for Gaming.')
 # adding to database
 
 #db.session.add(item1)
@@ -26,6 +30,18 @@ item3 = Item(name="Speaker Sony 60W",price=300,barcode='345127689014',descriptio
 
 #db.session.add(item3)
 #db.session.commit()
+
+""" db.session.add(item4)
+db.session.commit()
+
+db.session.add(item5)
+db.session.commit()
+
+db.session.add(item6)
+db.session.commit()
+
+db.session.add(item7)
+db.session.commit() """
 
 
 # print out database items object

@@ -1,8 +1,10 @@
 
 
-from market import db, login_manager
-from market import bcrypt
+#from . import login_manager
+from extensions import db, login_manager, bcrypt
+#from market import bcrypt
 from flask_login import UserMixin
+from dataclasses import dataclass 
 
 # loader usage =>create session => for managing more pages with the same user 
 @login_manager.user_loader # contain UserMixin - methods that must pass before its loaded
@@ -13,7 +15,6 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
 
-    # budget $dollar - private variable
 
     id = db.Column(db.Integer(),primary_key=True)
     userName = db.Column(db.String(length=30),nullable=False,unique=True)
@@ -61,10 +62,11 @@ class User(db.Model, UserMixin):
     def __repr__(self) -> str:
         return f'User:<{self.userName}>'
 
+
+
 class Item(db.Model):
 
-    # counter - if you have the same product counter+1
-
+  
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(length=30), nullable=False, unique=True)
     price = db.Column(db.Integer(), nullable=False)
