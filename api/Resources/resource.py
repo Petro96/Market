@@ -13,11 +13,11 @@ class UserList(Resource):
 
     def get(self):
 
-        shema = UserShema(many=True)
+        schema = UserShema(many=True)
 
         users = User.query.all()
 
-        return {"results":shema.dump(users)}
+        return {"results":schema.dump(users)}
     
     
     
@@ -28,22 +28,22 @@ class UserResource(Resource):
 
         user = User.query.get_or_404(user_id)
 
-        shema = UserShema()
+        schema = UserShema()
 
-        return {"user":shema.dump(user)}
+        return {"user":schema.dump(user)}
     
     def put(self,user_id):
 
-        shema = UserShema()
+        schema = UserShema(partial=True)
 
         user = User.query.get_or_404(user_id)
 
-        user = shema.load(request.json, instance=user)
+        user = schema.load(request.json, instance=user)
 
         db.session.add(user)
         db.session.commit()
 
-        return {"msg":"User updated", "user":shema.dump(user)}
+        return {"msg":"User updated", "user":schema.dump(user)}
     
     def delete(self, user_id):
 
@@ -61,17 +61,56 @@ class ItemList(Resource):
 
     def get(self):
 
-        shema = ItemShema(many=True)
+        schema = ItemShema(many=True)
 
         items = Item.query.all()
 
-        return {"results":shema.dump(items)}
+        return {"results":schema.dump(items)}
     
     def post(self):
 
-        pass
+        schema = ItemShema()
+        validate_data = schema.load(request.json)
+
+        item = Item(name=validate_data.name,
+                    price=validate_data.price,
+                    barcode=validate_data.barcode,
+                    description=validate_data.description
+                    )
+        db.session.add(item)
+        db.session.commit()
+
+        return {"msg":"Item created","item":schema.dump(item)}
 
 
 class ItemResource(Resource):
 
-    pass
+    def get(self,item_id):
+
+        item = Item.query.get_or_404(item_id)
+
+        schema = ItemShema()
+
+        return {"item":schema.dump(item)}
+    
+    def put(self,item_id):
+
+        schema = ItemShema(partial=True)
+
+        item = Item.query.get_or_404(item_id)
+
+        item = schema.load(request.json,instance=item)
+
+        db.session.add(item)
+        db.session.commit()
+
+        return {"msg":"Item updated", "Item":schema.dump(item)}
+    
+    def delete(self,item_id):
+
+        item = Item.query.get_or_404(item_id)
+
+        db.session.delete(item)
+        db.session.commit()
+
+        return {"msg":"Item deleted"}

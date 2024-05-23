@@ -2,7 +2,7 @@
 
 
 from extensions import ma
-from market.models import User, Item
+from market.models import User
 
 from marshmallow.fields import String, Integer
 from marshmallow import validate, validates_schema, ValidationError
