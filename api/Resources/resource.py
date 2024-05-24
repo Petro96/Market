@@ -8,14 +8,45 @@ from extensions import db
 from api.schemas.user import UserShema
 from api.schemas.item import ItemShema
 
+from sqlalchemy import desc
+
 
 class UserList(Resource):
 
     def get(self):
 
+        name_filter = request.args.get("userName")
+        budget_filter = request.args.get("budget")
+        email_filter = request.args.get("email")
+        sorts = request.args.get("sort")
+
+        user_query = User.query
+
+        if name_filter:
+
+            user_query = user_query.filter(User.userName.ilike(f"%{name_filter}%"))
+
+        if budget_filter:
+
+            user_query = user_query.filter(User.budget == budget_filter)
+
+        if email_filter:
+
+            user_query = user_query.filter(User.email_address.in_(email_filter.split(",")))
+
+        if sorts:
+            for sort in sorts.split(","):
+                descending = sort[0] == "-"
+                if descending:
+                    field = getattr(User,sort[1:])  
+                    user_query = user_query.order_by(desc(field))
+                else:
+                    field = getattr(User,sort)
+                    user_query = user_query.order_by(field)
+
         schema = UserShema(many=True)
 
-        users = User.query.all()
+        users = user_query.all()
 
         return {"results":schema.dump(users)}
     
@@ -26,6 +57,7 @@ class UserResource(Resource):
 
     def get(self, user_id):
 
+        
         user = User.query.get_or_404(user_id)
 
         schema = UserShema()
@@ -61,9 +93,33 @@ class ItemList(Resource):
 
     def get(self):
 
+        name_filter = request.args.get("name")
+        price_filter = request.args.get("price")
+        sorts = request.args.get("sort")
+
+        item_query = Item.query
+
+        if name_filter:
+
+            item_query = item_query.filter(Item.name.ilike(f"%{name_filter}%"))
+
+        if price_filter:
+
+            item_query = item_query.filter(Item.price == price_filter)
+
+        if sorts:
+            for sort in sorts.split(","):
+                descending = sort[0] == "-"
+                if descending:
+                    field = getattr(Item,sort[1:])
+                    item_query = item_query.order_by(desc(field))
+                else:
+                    field = getattr(Item,sort)
+                    item_query = item_query.order_by(field)
+
         schema = ItemShema(many=True)
 
-        items = Item.query.all()
+        items = item_query.all()
 
         return {"results":schema.dump(items)}
     
