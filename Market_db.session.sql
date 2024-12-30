@@ -40,8 +40,10 @@ SELECT userName, email_address FROM user ORDER BY userName ASC;
 
 SELECT userName, email_address, budget FROM user WHERE budget<600 AND userName LIKE 'J%'; 
 
-SELECT user.userName, count(item.owner) as item_count
+/* select name that owned more than one item and select one of those items that cost more than 300$ */
+SELECT user.userName, count(item.owner) as item_count,item.name
 FROM item
 INNER JOIN user ON user.id = item.owner
 GROUP BY userName
-HAVING Count(item.owner) > 1;
+HAVING Count(item.owner) > 1 AND price > 300;
+
