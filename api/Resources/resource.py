@@ -10,10 +10,13 @@ from api.schemas.item import ItemShema
 
 from sqlalchemy import desc
 
+#from flask_query_builder.querying import QueryBuilder
 
 class UserList(Resource):
 
     def get(self):
+
+        # sorting 
 
         name_filter = request.args.get("userName")
         budget_filter = request.args.get("budget")
@@ -43,6 +46,8 @@ class UserList(Resource):
                 else:
                     field = getattr(User,sort)
                     user_query = user_query.order_by(field)
+
+        # sortin by query builder
 
         schema = UserShema(many=True)
 
