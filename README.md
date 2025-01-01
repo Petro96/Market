@@ -56,4 +56,81 @@ flask run
 ```
 3. Open your web browser and go to `http://127.0.0.1:5000/` to see the application in action.
 
-## Project Structure
+# Flask Web App Docker Setup
+
+This guide will help you build and run your Flask web application using Docker.
+
+## Prerequisites
+
+- Docker installed on your machine.
+
+## Building the Docker Image
+
+1. Clone the repository if you haven't already:
+
+```sh
+git clone https://github.com/Petro96/Market.git
+cd Market
+```
+
+2. Build the Docker image:
+```sh
+docker build -t flask-web-app .
+```
+
+## Running the Docker Container
+
+1. Run the Docker container:
+```sh
+docker run -d -p 5000:5000 --name flask-web-app-container flask-web-app
+```
+
+2. Open your web browser and go to `http://localhost:5000` to see the application in action.
+
+## Stopping the Docker Container
+
+1. Stop the running container:
+```sh
+docker stop flask-web-app-container
+```
+
+2. Remove the container:
+```sh
+docker rm flask-web-app-container
+```
+
+# Clone DockerHub image and run your App
+
+This guide will help you pull the Docker image from Docker Hub and run your Flask web application using Docker.
+
+## Prerequisites
+
+- Docker installed on your machine.
+
+## Pulling the Docker Image
+
+1. Pull the Docker image from Docker Hub:
+```sh
+docker pull yourusername/flask-web-app:latest
+```
+
+## Running the Docker Container
+
+1. Run the Docker container:
+```sh
+docker run -d -p 5000:5000 --name flask-web-app-container yourusername/flask-web-app:latest
+```
+
+2. Open your web browser and go to `http://localhost:5000` to see the application in action.
+
+## Stopping the Docker Container
+
+1. Stop the running container:
+```sh
+docker stop flask-web-app-container
+```
+
+2. Remove the container:
+```sh
+docker rm flask-web-app-container
+```
