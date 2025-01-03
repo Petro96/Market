@@ -111,14 +111,14 @@ This guide will help you pull the Docker image from Docker Hub and run your Flas
 
 1. Pull the Docker image from Docker Hub:
 ```sh
-docker pull yourusername/flask-web-app:latest
+docker pull petrovicvlado/market-flask-app
 ```
 
 ## Running the Docker Container
 
 1. Run the Docker container:
 ```sh
-docker run -d -p 5000:5000 --name flask-web-app-container yourusername/flask-web-app:latest
+docker run -d -p 5000:5000 --name marketapp petrovicvlado/market-flask-app
 ```
 
 2. Open your web browser and go to `http://localhost:5000` to see the application in action.
@@ -127,10 +127,10 @@ docker run -d -p 5000:5000 --name flask-web-app-container yourusername/flask-web
 
 1. Stop the running container:
 ```sh
-docker stop flask-web-app-container
+docker stop petrovicvlado/market-flask-app
 ```
 
 2. Remove the container:
 ```sh
-docker rm flask-web-app-container
+docker rm petrovicvlado/market-flask-app
 ```
